@@ -1,0 +1,51 @@
+
+game.Players.PlayerAdded:Connect(function(player)
+    -- Wait for the player's character to be fully loaded
+    player.CharacterAdded:Connect(function(character)
+        -- Create a Highlight instance for the character
+        local highlight = Instance.new("Highlight")
+        highlight.Parent = character
+        highlight.Adornee = character
+        highlight.FillColor = Color3.fromRGB(255, 0, 0)  -- Set the highlight color (red in this case)
+        highlight.FillTransparency = 0.5  -- Adjust the transparency (0 is fully visible)
+        highlight.OutlineColor = Color3.fromRGB(0, 255, 0)  -- Set the outline color (green in this case)
+        highlight.OutlineTransparency = 0.5  -- Adjust outline transparency
+        
+        -- Create a BillboardGui for the name tag
+        local nameTag = Instance.new("BillboardGui")
+        nameTag.Parent = character
+        nameTag.Adornee = character.Head  -- Position the name tag above the character's head
+        nameTag.Size = UDim2.new(0, 200, 0, 50)  -- Set the size of the name tag
+        nameTag.StudsOffset = Vector3.new(0, 2, 0)  -- Adjust the offset (height above the head)
+        nameTag.AlwaysOnTop = true  -- Keep the name tag on top
+
+        -- Create a TextLabel to display the player's name
+        local textLabel = Instance.new("TextLabel")
+        textLabel.Parent = nameTag
+        textLabel.Text = player.Name  -- Display the player's name
+        textLabel.Size = UDim2.new(1, 0, 1, 0)  -- Fill the BillboardGui with the text
+        textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)  -- Set the text color (white)
+        textLabel.BackgroundTransparency = 1  -- Make the background transparent
+        textLabel.TextStrokeTransparency = 0.8  -- Add stroke for better visibility
+        textLabel.TextSize = 18  -- Set the text size
+        textLabel.TextAlign = Enum.TextAlign.Center  -- Center the text
+        textLabel.TextYAlignment = Enum.TextYAlignment.Center  -- Center the text vertically
+    end)
+end)
+
+-- Remove highlights and name tags when the player leaves the game
+game.Players.PlayerRemoving:Connect(function(player)
+    if player.Character then
+        -- Remove the Highlight
+        local highlight = player.Character:FindFirstChildOfClass("Highlight")
+        if highlight then
+            highlight:Destroy()
+        end
+
+        -- Remove the BillboardGui (name tag)
+        local nameTag = player.Character:FindFirstChildOfClass("BillboardGui")
+        if nameTag then
+            nameTag:Destroy()
+        end
+    end
+end)
